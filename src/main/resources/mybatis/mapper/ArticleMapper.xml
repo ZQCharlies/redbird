@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.redbird.dao.ArticleDao">
+    <insert id="insertArticle" parameterType="com.redbird.pojo.Article">
+        INSERT INTO `redbird`.`tb_article` (`uuid`, `title`, `abscontent`, `content`,
+        `author`, `tage`)
+        VALUES (#{uuid}, #{title}, #{abscontent}, #{content}, #{author}, #{tage});
+    </insert>
+    <update id="updateArticle" parameterType="com.redbird.pojo.Article">
+        update `redbird`.`tb_article` set `title`=#{title}, `abscontent`=#{abscontent}, `content`=#{content},
+        `author`=#{author}, `tage`=#{tage}, `updatetime`=NOW()
+        where uuid = #{uuid}
+    </update>
+    <select id="getArticleByUuid" resultType="com.redbird.pojo.Article" parameterType="string">
+        SELECT uuid,title,abscontent,author,tage,content,DATE_FORMAT(createtime,'%Y-%m-%d %h:%m:%s') createtime  FROM tb_article WHERE uuid=#{uuid} LIMIT 1
+    </select>
+    <select id="getArticleList" resultType="com.redbird.pojo.Article">
+        SELECT uuid,title,abscontent,content,author,tage,viewcount,commcount,likecount,
+        DATE_FORMAT(createtime,'%Y-%m-%d %h:%m:%s') createtime,DATE_FORMAT(updatetime,'%Y-%m-%d %h:%m:%s') updatetime
+        FROM tb_article where isdel =0
+    </select>
+    <update id="deleteArticleById" parameterType="string">
+        UPDATE  `redbird`.`tb_article` SET 'isdel'= 1
+        where uuid=#{uuid}
+    </update>
+    <select id="getCount" resultType="Integer">
+        SELECT count(*) from tb_article where isdel =0
+    </select>
+</mapper>
